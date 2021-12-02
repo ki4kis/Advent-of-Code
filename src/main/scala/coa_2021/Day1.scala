@@ -2,24 +2,23 @@ package coa_2021
 
 import cats.effect.IO
 
-object Day1Part1 extends AdventApp[Int](1) {
-  def task(input: List[Int]): IO[Unit] = IO {
-    val increasing = input.sliding(2).count {
-      case List(a, b) => b > a
-    }
+// https://adventofcode.com/2021/day/1
 
-    println(s"Increasing: $increasing")
+object Day1 extends AdventApp[Int](day = 1) {
+  def part1(input: List[Int]): IO[String] = IO {
+    input
+      .sliding(2).count(isIncreasing) // count how many times is increasing
+      .toString
   }
-}
 
-object Day1Part2 extends AdventApp[Int](1) {
-  def task(input: List[Int]): IO[Unit] = IO {
-    val increasing = input
-      .sliding(3).map(_.sum).toList
-      .sliding(2).count {
-        case List(a, b) => b > a
-      }
+  def part2(input: List[Int]): IO[String] = IO {
+    input
+      .sliding(3).map(_.sum).toList // sum of each 3 numbers
+      .sliding(2).count(isIncreasing) // count how many times is increasing
+      .toString
+  }
 
-    println(s"Increasing: $increasing")
+  private def isIncreasing(list: List[Int]) = list match {
+    case List(a, b) => b > a
   }
 }
