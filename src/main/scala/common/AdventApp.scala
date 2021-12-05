@@ -20,7 +20,8 @@ abstract class AdventApp[T: Reads](year: Int, day: Int) extends IOApp.Simple {
 
   def run: IO[Unit] = lines.use { lines =>
     val input = lines map Reads.readLine[T]
-    (part1(input) >>= printResult(1)) *>
+    IO.println(s"Code of Advent ($year) Day $day result") *>
+      (part1(input) >>= printResult(1)) *>
       (part2(input) >>= printResult(2))
   }
 }

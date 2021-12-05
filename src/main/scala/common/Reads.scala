@@ -1,6 +1,5 @@
 package common
 
-import cats.implicits.catsSyntaxApplicativeId
 import magnolia1._
 
 import scala.language.experimental.macros
@@ -14,7 +13,7 @@ object Reads {
   case class Result[+T](value: T, tail: List[String] = Nil)
 
   def apply[T: Reads]: Reads[T] = implicitly[Reads[T]]
-  def readLine[T: Reads](line: String): T = Reads[T].reads(line.split("[ ,]").toList.filterNot(_ == ""))
+  def readLine[T: Reads](line: String): T = Reads[T].reads(line.split("[ ,:\\-(\\->)]").toList.filterNot(_ == ""))
 
   def manual[T](parser: String => T): Reads[T] = (line) => Result(parser(line mkString " "))
 
@@ -39,6 +38,7 @@ object Reads {
 
   implicit val intReads: Reads[Int] = { case head :: tail => Result(head.toInt, tail) }
   implicit val strReads: Reads[String] = { case head :: tail => Result(head, tail) }
+  implicit val charReads: Reads[Char] = { case head :: tail => Result(head.head, tail)}
 
   implicit def listReads[T: Reads]: Reads[List[T]] = {
     case Nil | "" :: Nil => Result(Nil)
