@@ -3,7 +3,9 @@ package coa_2021.week1
 import cats.effect.IO
 import common.AdventApp
 
-// https://adventofcode.com/2021/day/6
+import scala.annotation.tailrec
+
+// https://adventofcode.com/2021/day/7
 
 object Day7 extends AdventApp[List[Int]](year = 2021, day = 7) {
   type FuelCost = Double => Double
@@ -18,10 +20,11 @@ object Day7 extends AdventApp[List[Int]](year = 2021, day = 7) {
     minFuel(positions)(fuelCost2)
   }
 
-  def minFuel(input: Input)(implicit fuelCost: FuelCost) = {
+  def minFuel(input: Input)(implicit fuelCost: FuelCost): (Int, Int) = {
     val min = input.head.toDouble
     val max = input.last.toDouble
 
+    @tailrec
     def loop(min: Double, max: Double, minFuel: Double, maxFuel: Double): (Int, Int) = {
       val mid = (min + max) / 2
       if (max - min < 0.5) {
