@@ -3,7 +3,7 @@ package coa_2021.week2
 import cats.effect.IO
 import common.AdventApp
 
-// https://adventofcode.com/2021/day/7
+// https://adventofcode.com/2021/day/8
 
 object Day8 extends AdventApp[List[String]](year = 2021, day = 8) {
   def part1(input: List[Input]): IO[Any] = IO {

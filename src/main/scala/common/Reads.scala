@@ -13,7 +13,7 @@ object Reads {
   case class Result[+T](value: T, tail: List[String] = Nil)
 
   def apply[T: Reads]: Reads[T] = implicitly[Reads[T]]
-  def readLine[T: Reads](line: String): T = Reads[T].reads(line.split("[ ,:\\-(\\->)]").toList.filterNot(_ == ""))
+  def readLine[T: Reads](line: String): T = Reads[T].reads(line.split("( |,|:|-|->)").toList.filterNot(_ == ""))
 
   def manual[T](parser: String => T): Reads[T] = (line) => Result(parser(line mkString " "))
 

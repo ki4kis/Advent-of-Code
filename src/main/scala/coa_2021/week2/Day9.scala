@@ -3,7 +3,7 @@ package coa_2021.week2
 import cats.effect.IO
 import common.AdventApp
 
-// To bootstrap new days
+// https://adventofcode.com/2021/day/9
 
 object Day9 extends AdventApp[String](year = 2021, day = 9) {
   def part1(input: List[Input]): IO[Any] = IO {
