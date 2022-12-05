@@ -13,6 +13,7 @@ dist
 
 # BSP
 /.bsp
+/.bloop
 
 # IDE project files/directories
 /.idea
@@ -21,6 +22,8 @@ dist
 /.ensime*
 /.classpath
 /.project
+/.metals
+/.vscode
 
 # Mac files
 .DS_Store

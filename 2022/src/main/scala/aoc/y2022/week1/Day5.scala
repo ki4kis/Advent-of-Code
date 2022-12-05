@@ -1,0 +1,105 @@
+package aoc.y2022.week1
+
+import cats.effect.IO
+import cats.implicits._
+import cats.data.StateT
+import common.v2.AdventApp
+import common.v2.Reads
+import scala.collection.immutable.ListMap
+
+// To bootstrap new days
+
+object Day5 extends AdventApp[Ship](year = 2022, day = 5) {
+  def reads(raw: String): Input = Ship.fromRaw(raw)
+  def part1(input: Input): IO[Any] = Ship.part1.runA(input)
+  def part2(input: Input): IO[Any] = Ship.part2.runA(input)
+}
+
+case class Ship(
+    stacks: ListMap[Int, List[String]],
+    instructions: List[Instruction]
+) {
+  self =>
+  def hasInstruction: Boolean = instructions.nonEmpty
+
+  def takeInstruction: (Ship, Instruction) = instructions match {
+    case head :: tail => copy(instructions = tail) -> head
+  }
+
+  def move(amount: Int, from: Int, to: Int): Ship = {
+    val fromStack = stacks(from)
+    val head = fromStack.take(amount)
+    val tail = fromStack.drop(amount)
+    val toStack = stacks(to)
+
+    copy(stacks = stacks ++ Map(from -> tail, to -> (head ::: toStack)))
+  }
+
+  def readTop = stacks.values.map(_.head).mkString
+}
+
+object Ship {
+  type State[T] = StateT[IO, Ship, T]
+
+  def move(amount: Int, from: Int, to: Int): State[Unit] =
+    StateT.modify(_.move(amount, from, to))
+  val takeInst: State[Instruction] = StateT(ship => IO(ship.takeInstruction))
+  val hasInst: State[Boolean] = StateT.inspect(_.hasInstruction)
+  val readTop: State[String] = StateT.inspect(_.readTop)
+
+  val doInstruction1: State[Unit] = for {
+    Instruction(amount, from, to) <- takeInst
+    _ <- move(amount = 1, from, to).replicateA(amount)
+  } yield ()
+
+  val doInstruction2: State[Unit] = for {
+    Instruction(amount, from, to) <- takeInst
+    _ <- move(amount, from, to)
+  } yield ()
+
+  val part1: State[String] = {
+    lazy val loop: State[Unit] = doInstruction1 *> (hasInst >>= loop.whenA)
+    loop *> readTop
+  }
+
+  val part2: State[String] = {
+    lazy val loop: State[Unit] = doInstruction2 *> (hasInst >>= loop.whenA)
+    loop *> readTop
+  }
+
+  def fromRaw(raw: String): Ship = {
+    val Array(rawStacks, rawInstructions) = raw.split("\n\n")
+    val stacks = Stack.fromLines(rawStacks.split("\n").toList)
+    val instructions =
+      rawInstructions.split("\n").toList.map(Instruction.fromLine)
+
+    Ship(stacks, instructions)
+  }
+}
+
+object Stack {
+  val Crate = " *\\[(\\w)\\] *".r
+  val Idx = " *(\\d) *".r
+
+  def fromLines(lines: List[String]): ListMap[Int, List[String]] =
+    ListMap.from {
+      for {
+        (Idx(idx) :: stack) <- lines
+          .map(_.grouped(4).toList)
+          .reverse
+          .transpose
+      } yield (idx.toInt) -> stack.reverse.collect { case Crate(crate) =>
+        crate
+      }
+    }
+}
+
+case class Instruction(move: Int, from: Int, to: Int)
+
+object Instruction {
+  val Line = "move (\\d+) from (\\d+) to (\\d+)".r
+
+  def fromLine(line: String): Instruction = line match {
+    case Line(move, from, to) => Instruction(move.toInt, from.toInt, to.toInt)
+  }
+}
