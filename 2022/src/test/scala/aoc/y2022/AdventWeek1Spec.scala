@@ -8,21 +8,25 @@ import org.scalatest.Assertions._
 
 import cats.effect.unsafe.implicits.global
 
-class Advent2022Spec extends AnyFreeSpec {
-  val apps: List[AdventApp[_]] = List(Day1, Day2, Day3, Day4, Day5)
+class AdventWeek1Spec extends AnyFreeSpec {
+  val apps: List[AdventApp[_]] = List(Day1, Day2, Day3, Day4, Day5, Day6, Day7)
   val test: List[(Any, Any)] = List(
     (24000, 45000),
     (15, 12),
     (157, 70),
     (2, 4),
-    ("CMZ", "MCD")
+    ("CMZ", "MCD"),
+    (7, 19)
+    // ("", "")
   )
   val real: List[(Any, Any)] = List(
     (71780, 212489),
     (8890, 10238),
     (8039, 2510),
     (485, 857),
-    ("FWNSHLDNZ", "RNRGDNFQG")
+    ("FWNSHLDNZ", "RNRGDNFQG"),
+    (1802, 3551)
+    // ("", "")
   )
 
   "Advent of Code" - {
