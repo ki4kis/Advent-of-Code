@@ -7,7 +7,8 @@ lazy val commonSettings = Seq(
     "org.scala-lang" % "scala-reflect" % "2.13.10",
     "org.typelevel" %% "cats-core" % "2.9.0",
     "org.typelevel" %% "cats-effect" % "3.4.2",
-    "com.softwaremill.magnolia1_2" %% "magnolia" % "1.1.2"
+    "com.softwaremill.magnolia1_2" %% "magnolia" % "1.1.2",
+    "org.scalatest" %% "scalatest" % "3.2.14" % "test"
   )
 )
 

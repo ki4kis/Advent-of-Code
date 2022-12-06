@@ -4,28 +4,33 @@ import cats.effect._
 import cats.implicits._
 
 import scala.io.{BufferedSource, Source}
-
-abstract class AdventApp[T](year: Int, day: Int) extends IOApp.Simple {
+abstract class AdventApp[T](val year: Int, val day: Int) extends IOApp.Simple {
   type Input = T
   def reads(raw: String): T
 
   def part1(input: T): IO[Any]
   def part2(input: T): IO[Any]
 
-  private val input: IO[BufferedSource] = IO(
-    Source.fromResource(s"day$day.input")
+  private def input(file: String): IO[BufferedSource] = IO(
+    Source.fromResource(s"$file.input")
   )
-  private val raw: Resource[IO, String] = for {
-    input <- Resource.make(input)(source => IO(source.close()))
+  private def raw(file: String): Resource[IO, String] = for {
+    input <- Resource.make(input(file))(source => IO(source.close()))
   } yield input.getLines.mkString("\n")
 
   private def printResult(part: Int)(res: Any) = IO.println(s"Part$part: $res")
 
-  def run: IO[Unit] = raw.use { raw =>
-    val input = reads(raw)
-    IO.println(s"Code of Advent ($year) Day $day result") *> (for {
-      _ <- part1(input) >>= printResult(1)
-      _ <- part2(input) >>= printResult(2)
-    } yield ())
-  }
+  def parseAndRun(raw: String): IO[(Any, Any)] =
+    for {
+      input <- IO(reads(raw))
+      res1 <- part1(input)
+      res2 <- part2(input)
+    } yield (res1, res2)
+
+  val real: IO[(Any, Any)] = raw(s"day$day").use(parseAndRun)
+  val test: IO[(Any, Any)] = raw(s"day$day.test").use(parseAndRun)
+  val run: IO[Unit] = IO.println(s"Code of Advent ($year) Day $day result") *>
+    real flatMap { case (result1, result2) =>
+      printResult(1)(result1) *> printResult(2)(result2)
+    }
 }

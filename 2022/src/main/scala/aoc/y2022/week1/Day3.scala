@@ -27,7 +27,6 @@ object Day3 extends AdventApp[Vector[Rucksack]](year = 2022, day = 3) {
 
 case class Item(item: Char) {
   def priority: Int = Item.priorityMap(item)
-  override def toString(): String = (item, priority).toString()
 }
 
 object Item {
@@ -36,10 +35,6 @@ object Item {
 }
 
 case class Rucksack(first: Seq[Item], second: Seq[Item]) {
-  require(
-    first.length == second.length,
-    "Compartments don't have same number of items"
-  )
   val firstSet = first.toSet
   val secondSet = second.toSet
   val fullSet = firstSet ++ secondSet

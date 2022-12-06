@@ -4,10 +4,9 @@ import cats.effect.IO
 import cats.implicits._
 import cats.data.StateT
 import common.v2.AdventApp
-import common.v2.Reads
 import scala.collection.immutable.ListMap
 
-// To bootstrap new days
+// https://adventofcode.com/2022/day/5
 
 object Day5 extends AdventApp[Ship](year = 2022, day = 5) {
   def reads(raw: String): Input = Ship.fromRaw(raw)
@@ -18,8 +17,8 @@ object Day5 extends AdventApp[Ship](year = 2022, day = 5) {
 case class Ship(
     stacks: ListMap[Int, List[String]],
     instructions: List[Instruction]
-) {
-  self =>
+) { self =>
+  def readTop = stacks.values.map(_.head).mkString
   def hasInstruction: Boolean = instructions.nonEmpty
 
   def takeInstruction: (Ship, Instruction) = instructions match {
@@ -34,11 +33,17 @@ case class Ship(
 
     copy(stacks = stacks ++ Map(from -> tail, to -> (head ::: toStack)))
   }
-
-  def readTop = stacks.values.map(_.head).mkString
 }
 
 object Ship {
+  def fromRaw(raw: String): Ship = {
+    val Array(rawStacks, rawInsts) = raw.split("\n\n")
+    val stacks = Stack.fromLines(rawStacks.split("\n").toList)
+    val insts = rawInsts.split("\n").toList.map(Instruction.fromLine)
+
+    Ship(stacks, insts)
+  }
+
   type State[T] = StateT[IO, Ship, T]
 
   def move(amount: Int, from: Int, to: Int): State[Unit] =
@@ -47,34 +52,23 @@ object Ship {
   val hasInst: State[Boolean] = StateT.inspect(_.hasInstruction)
   val readTop: State[String] = StateT.inspect(_.readTop)
 
-  val doInstruction1: State[Unit] = for {
+  def run(doInstruction: State[Unit]): State[String] = {
+    lazy val loop: State[Unit] = doInstruction *> (hasInst >>= loop.whenA)
+    loop *> readTop
+  }
+
+  val instPart1: State[Unit] = for {
     Instruction(amount, from, to) <- takeInst
     _ <- move(amount = 1, from, to).replicateA(amount)
   } yield ()
 
-  val doInstruction2: State[Unit] = for {
+  val instPart2: State[Unit] = for {
     Instruction(amount, from, to) <- takeInst
     _ <- move(amount, from, to)
   } yield ()
 
-  val part1: State[String] = {
-    lazy val loop: State[Unit] = doInstruction1 *> (hasInst >>= loop.whenA)
-    loop *> readTop
-  }
-
-  val part2: State[String] = {
-    lazy val loop: State[Unit] = doInstruction2 *> (hasInst >>= loop.whenA)
-    loop *> readTop
-  }
-
-  def fromRaw(raw: String): Ship = {
-    val Array(rawStacks, rawInstructions) = raw.split("\n\n")
-    val stacks = Stack.fromLines(rawStacks.split("\n").toList)
-    val instructions =
-      rawInstructions.split("\n").toList.map(Instruction.fromLine)
-
-    Ship(stacks, instructions)
-  }
+  val part1 = run(instPart1)
+  val part2 = run(instPart2)
 }
 
 object Stack {
@@ -88,9 +82,8 @@ object Stack {
           .map(_.grouped(4).toList)
           .reverse
           .transpose
-      } yield (idx.toInt) -> stack.reverse.collect { case Crate(crate) =>
-        crate
-      }
+        parsedStack = stack.reverse.collect { case Crate(crate) => crate }
+      } yield (idx.toInt) -> parsedStack
     }
 }
 
