@@ -16,6 +16,7 @@ object Day7 extends AdventApp[FileSystem.System](year = 2022, day = 7) {
   def part1(input: Input): IO[Any] = IO(
     input.pathSizes.filter(_._2 <= 100000).values.sum
   )
+
   def part2(input: Input): IO[Any] = IO {
     val pathSizes = input.pathSizes
     val usedSpace = pathSizes(Path())
