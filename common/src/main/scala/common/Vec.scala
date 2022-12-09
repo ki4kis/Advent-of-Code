@@ -17,6 +17,8 @@ final case class Vec(vec: Vector[Int]) { self =>
   }
 
   def *(amount: Int): Vec = Vec(vec.map(_ * amount))
+
+  def map(f: Int => Int): Vec = Vec(vec.map(f))
 }
 
 object Vec {
