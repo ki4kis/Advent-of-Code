@@ -15,17 +15,18 @@ object Day8 extends AdventApp[TreeGrid](year = 2022, day = 8) {
 }
 
 case class Pos(x: Int, y: Int)
+
 case class TreeGrid(grid: Vector[Vector[Int]]) { self =>
-  lazy val allPos = for {
+  val rows = grid.length
+  val cols = grid.head.length
+
+  val allPos = for {
     y <- (0 until rows).toVector
     x <- (0 until cols)
   } yield Pos(x, y)
 
-  val rows = grid.length
-  val cols = grid.head.length
-
   val part1: IO[Int] = allPos.parTraverse(isVisibleFromOutside).map(_.count(identity))
-  val part2: IO[Int] = allPos.parTraverse(visibilityInside).map(_.reduce(_ max _))
+  val part2: IO[Int] = allPos.parTraverse(visibilityFromInside).map(_.reduce(_ max _))
 
   def lookup(pos: Pos): Int = {
     for {
@@ -38,7 +39,7 @@ case class TreeGrid(grid: Vector[Vector[Int]]) { self =>
     (pos.x to -1 by -1).toList.drop(1).map(x => lookup(Pos(x, pos.y))),
     (pos.y to -1 by -1).toList.drop(1).map(y => lookup(Pos(pos.x, y))),
     (pos.x to cols).toList.drop(1).map(x => lookup(Pos(x, pos.y))),
-    (pos.y to rows).toList.drop(1).map(y => lookup(Pos(pos.x, y)))
+    (pos.y to rows).toList.drop(1).map(y => lookup(Pos(pos.x, y))),
   ).map(treeLineReduce).reduce(directionReduce)
 
   def isVisibleFromOutside(pos: Pos): IO[Boolean] = IO {
@@ -47,17 +48,14 @@ case class TreeGrid(grid: Vector[Vector[Int]]) { self =>
     treeHeight > minHeight
   }
 
-  def visibilityInside(pos: Pos): IO[Int] = IO {
+  def visibilityFromInside(pos: Pos): IO[Int] = IO {
     val treeHeight = lookup(pos)
-    def viewDistance(trees: List[Int]) = trees
-      .dropRight(1)
-      .foldLeft[Either[Int, Int]](Left(0)) {
-        case (Right(acc), _)                             => Right(acc)
-        case (Left(acc), height) if height >= treeHeight => Right(acc + 1)
-        case (Left(acc), height)                         => Left(acc + 1)
-      }
-      .fold(identity, identity)
+    def viewDistance(trees: List[Int], score: Int = 0): Int = trees match {
+      case -1 :: Nil | Nil                     => score
+      case height :: _ if height >= treeHeight => score + 1
+      case _ :: tail                           => viewDistance(tail, score + 1)
+    }
 
-    calculate(pos)(viewDistance)(_ * _)
+    calculate(pos)(viewDistance(_))(_ * _)
   }
 }

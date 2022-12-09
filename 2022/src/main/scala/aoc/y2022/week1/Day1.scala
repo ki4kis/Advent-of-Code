@@ -13,7 +13,5 @@ object Day1 extends AdventApp[Vector[Seq[Int]]](year = 2022, day = 1) {
   } yield chunk.split("\n").map(_.toInt)
 
   def part1(input: Input): IO[Any] = IO(input.map(_.sum).max)
-  def part2(input: Input): IO[Any] = IO(
-    input.map(_.sum).sorted.takeRight(3).sum
-  )
+  def part2(input: Input): IO[Any] = IO(input.map(_.sum).sorted.takeRight(3).sum)
 }

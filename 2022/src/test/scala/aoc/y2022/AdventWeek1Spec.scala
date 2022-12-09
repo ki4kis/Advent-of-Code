@@ -17,7 +17,7 @@ class AdventWeek1Spec extends AnyFreeSpec {
     (2, 4),
     ("CMZ", "MCD"),
     (7, 19),
-    (95437L, 24933642L)
+    (95437L, 24933642L),
   )
   val real: List[(Any, Any)] = List(
     (71780, 212489),
@@ -26,7 +26,7 @@ class AdventWeek1Spec extends AnyFreeSpec {
     (485, 857),
     ("FWNSHLDNZ", "RNRGDNFQG"),
     (1802, 3551),
-    (1243729L, 4443914L)
+    (1243729L, 4443914L),
   )
 
   "Advent of Code" - {

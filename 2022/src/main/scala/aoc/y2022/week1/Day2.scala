@@ -18,14 +18,15 @@ object Day2 extends AdventApp[Vector[(RPS, String)]](year = 2022, day = 2) {
 
   val part1Map: Map[String, RPS] = RPS.parseMap("X", "Y", "Z")
   val part2Map: Map[RPS, Map[String, RPS]] = Map(
-    Rock -> RPS.parseMap("Y", "Z", "X"),
-    Paper -> RPS.parseMap("X", "Y", "Z"),
-    Scissors -> RPS.parseMap("Z", "X", "Y")
+    Rock     -> RPS.parseMap("Y", "Z", "X"),
+    Paper    -> RPS.parseMap("X", "Y", "Z"),
+    Scissors -> RPS.parseMap("Z", "X", "Y"),
   )
 
   def part1(input: Input): IO[Any] = IO(input.map { case (that, self) =>
     that vs part1Map(self)
   }.sum)
+
   def part2(input: Input): IO[Any] = IO(input.map { case (that, self) =>
     that vs part2Map(that)(self)
   }.sum)
@@ -52,16 +53,16 @@ abstract class RPS(val score: Int) extends Ordered[RPS] { self =>
 }
 
 object RPS {
-  case object Rock extends RPS(1)
-  case object Paper extends RPS(2)
+  case object Rock     extends RPS(1)
+  case object Paper    extends RPS(2)
   case object Scissors extends RPS(3)
 
   def parseMap(by: String*): Map[String, RPS] = by match {
     case Seq(rock, paper, scissors) =>
       Map(
-        rock -> Rock,
-        paper -> Paper,
-        scissors -> Scissors
+        rock     -> Rock,
+        paper    -> Paper,
+        scissors -> Scissors,
       )
   }
 }

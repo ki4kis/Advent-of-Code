@@ -14,7 +14,7 @@ object Day3 extends AdventApp[Vector[Rucksack]](year = 2022, day = 3) {
     .map(Rucksack.fromLine)
 
   def part1(input: Input): IO[Any] = IO(
-    input.flatMap(_.overlap).map(_.priority).sum
+    input.flatMap(_.overlap).map(_.priority).sum,
   )
   def part2(input: Input): IO[Any] = IO {
     val groups = for {
@@ -35,9 +35,9 @@ object Item {
 }
 
 case class Rucksack(first: Seq[Item], second: Seq[Item]) {
-  val firstSet = first.toSet
+  val firstSet  = first.toSet
   val secondSet = second.toSet
-  val fullSet = firstSet ++ secondSet
+  val fullSet   = firstSet ++ secondSet
 
   def overlap: Set[Item] = firstSet & secondSet
 }

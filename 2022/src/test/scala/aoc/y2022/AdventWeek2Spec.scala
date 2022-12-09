@@ -10,24 +10,24 @@ import cats.effect.unsafe.implicits.global
 
 class AdventWeek2Spec extends AnyFreeSpec {
   val apps: List[AdventApp[_]] =
-    List(Day8) // , Day9, Day10, Day11, Day12, Day13, Day14)
+    List(Day8, Day9) // , Day10, Day11, Day12, Day13, Day14)
   val test: List[(Any, Any)] = List(
     (21, 8),
+    (13, 1),
     ("Not yet implemented!", "Not yet implemented!"),
     ("Not yet implemented!", "Not yet implemented!"),
     ("Not yet implemented!", "Not yet implemented!"),
     ("Not yet implemented!", "Not yet implemented!"),
     ("Not yet implemented!", "Not yet implemented!"),
-    ("Not yet implemented!", "Not yet implemented!")
   )
   val real: List[(Any, Any)] = List(
     (1829, 291840),
+    (6563, 2653),
     ("Not yet implemented!", "Not yet implemented!"),
     ("Not yet implemented!", "Not yet implemented!"),
     ("Not yet implemented!", "Not yet implemented!"),
     ("Not yet implemented!", "Not yet implemented!"),
     ("Not yet implemented!", "Not yet implemented!"),
-    ("Not yet implemented!", "Not yet implemented!")
   )
 
   "Advent of Code" - {

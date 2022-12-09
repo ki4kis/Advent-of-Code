@@ -20,7 +20,7 @@ case class Assigment(first: (Int, Int), second: (Int, Int)) {
   val (a1, a2) = first
   val (b1, b2) = second
 
-  val firstSection = (a1 to a2).toSet
+  val firstSection  = (a1 to a2).toSet
   val secondSection = (b1 to b2).toSet
 
   val intersection = firstSection & secondSection

@@ -9,12 +9,12 @@ import scala.collection.immutable.SortedMap
 // https://adventofcode.com/2022/day/7
 
 object Day7 extends AdventApp[FileSystem.System](year = 2022, day = 7) {
-  val totalSpace = 70000000L
+  val totalSpace    = 70000000L
   val requiredSpace = 30000000L
 
   def reads(raw: String): Input = FileSystem.parse(raw)
   def part1(input: Input): IO[Any] = IO(
-    input.pathSizes.filter(_._2 <= 100000).values.sum
+    input.pathSizes.filter(_._2 <= 100000).values.sum,
   )
 
   def part2(input: Input): IO[Any] = IO {
@@ -28,7 +28,7 @@ object Day7 extends AdventApp[FileSystem.System](year = 2022, day = 7) {
 
 case class Path(path: List[String] = Nil) extends Ordered[Path] { self =>
   override def toString = "/" + path.reverse.mkString("/")
-  protected val key = (path.length, toString)
+  protected val key     = (path.length, toString)
   def compare(that: Path): Int =
     Ordering[(Int, String)].compare(self.key, that.key)
 
@@ -46,17 +46,17 @@ sealed trait FileSystem {
 }
 
 object FileSystem {
-  private val RDir = "dir ([\\w\\.]+)".r
+  private val RDir  = "dir ([\\w\\.]+)".r
   private val RFile = "(\\d+) ([\\w\\.]+)".r
 
   def parse(raw: String): System = parse(
-    raw.split("\n").map(Cmd.fromLine).toList.tail
+    raw.split("\n").map(Cmd.fromLine).toList.tail,
   )
 
   def parse(
       cmds: List[Either[Cmd, FileSystem]],
       path: Path = Path(),
-      files: Map[Path, List[FileSystem]] = Map.empty
+      files: Map[Path, List[FileSystem]] = Map.empty,
   ): System = {
     import Cmd._
 
@@ -80,7 +80,7 @@ object FileSystem {
     lazy val pathSizes = {
       def loop(
           paths: List[Path],
-          acc: Map[Path, Long] = Map.empty
+          acc: Map[Path, Long] = Map.empty,
       ): Map[Path, Long] = paths match {
         case Nil => acc
         case path :: tail =>
@@ -96,7 +96,7 @@ object FileSystem {
     }
   }
 
-  case class Dir(name: String) extends FileSystem
+  case class Dir(name: String)              extends FileSystem
   case class File(name: String, size: Long) extends FileSystem
 }
 
@@ -113,5 +113,5 @@ object Cmd {
   }
 
   case class cd(dir: String) extends Cmd
-  case object ls extends Cmd
+  case object ls             extends Cmd
 }
