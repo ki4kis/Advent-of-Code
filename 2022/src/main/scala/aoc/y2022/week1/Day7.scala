@@ -8,7 +8,8 @@ import scala.collection.immutable.SortedMap
 
 // https://adventofcode.com/2022/day/7
 
-object Day7 extends AdventApp[FileSystem.System](year = 2022, day = 7) {
+object Day7 extends AdventApp(year = 2022, day = 7) {
+  type Input = FileSystem.System
   val totalSpace    = 70000000L
   val requiredSpace = 30000000L
 

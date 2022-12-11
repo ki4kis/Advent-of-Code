@@ -6,15 +6,15 @@ import cats.implicits._
 import scala.io.{BufferedSource, Source}
 import scala.concurrent.duration._
 
-abstract class AdventApp[T](val year: Int, val day: Int) extends IOApp.Simple {
-  type Input = T
-  def reads(raw: String): T
+abstract class AdventApp(val year: Int, val day: Int) extends IOApp.Simple {
+  type Input
+  def reads(raw: String): Input
 
-  def part1(input: T): IO[Any]
-  def part2(input: T): IO[Any]
+  def part1(input: Input): IO[Any]
+  def part2(input: Input): IO[Any]
 
   private def input(file: String): IO[BufferedSource] = IO(
-    Source.fromResource(s"$file.input")
+    Source.fromResource(s"$file.input"),
   )
   private def raw(file: String): Resource[IO, String] = for {
     input <- Resource.make(input(file))(source => IO(source.close()))

@@ -6,8 +6,9 @@ import common.v2.Reads
 
 // To bootstrap new days
 
-object Day12 extends AdventApp[String](year = 2022, day = 12) {
-  def reads(raw: String): Input = raw
+object Day12 extends AdventApp(year = 2022, day = 12) {
+  type Input = String
+  def reads(raw: String): Input    = raw
   def part1(input: Input): IO[Any] = IO("Not yet implemented!")
   def part2(input: Input): IO[Any] = IO("Not yet implemented!")
 }

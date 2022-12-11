@@ -7,9 +7,9 @@ import common.v2.Reads
 
 // https://adventofcode.com/2022/day/8
 
-object Day8 extends AdventApp[TreeGrid](year = 2022, day = 8) {
-  def reads(raw: String): Input =
-    TreeGrid(raw.split("\n").toVector.map(_.toVector.map(_.toString().toInt)))
+object Day8 extends AdventApp(year = 2022, day = 8) {
+  type Input = TreeGrid
+  def reads(raw: String): Input    = TreeGrid(raw.split("\n").toVector.map(_.toVector.map(_.toString().toInt)))
   def part1(input: Input): IO[Any] = input.part1
   def part2(input: Input): IO[Any] = input.part2
 }

@@ -8,7 +8,8 @@ import common.Vec
 
 // https://adventofcode.com/2022/day/9
 
-object Day9 extends AdventApp[List[Vec]](year = 2022, day = 9) {
+object Day9 extends AdventApp(year = 2022, day = 9) {
+  type Input = List[Vec]
   def initRope(lenght: Int) = List(Vec(0, 0)).replicateA(lenght).flatten
 
   def reads(raw: String): Input    = raw.split("\n").toList.map(Motion.readLine).flatMap(_.toMultipleSteps)

@@ -6,8 +6,9 @@ import common.v2.Reads
 
 // https://adventofcode.com/2022/day/2
 
-object Day2 extends AdventApp[Vector[(RPS, String)]](year = 2022, day = 2) {
+object Day2 extends AdventApp(year = 2022, day = 2) {
   import RPS._
+  type Input = Vector[(RPS, String)]
   val Hands = "(\\w) (\\w)".r
 
   def reads(raw: String): Input = raw.split("\n").toVector.map {

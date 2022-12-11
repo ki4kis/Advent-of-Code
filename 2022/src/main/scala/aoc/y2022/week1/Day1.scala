@@ -7,7 +7,8 @@ import common.v2.Reads
 
 // https://adventofcode.com/2022/day/1
 
-object Day1 extends AdventApp[Vector[Seq[Int]]](year = 2022, day = 1) {
+object Day1 extends AdventApp(year = 2022, day = 1) {
+  type Input = Vector[Seq[Int]]
   def reads(raw: String): Input = for {
     chunk <- raw.split("\n\n").toVector
   } yield chunk.split("\n").map(_.toInt)

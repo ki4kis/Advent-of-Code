@@ -6,7 +6,8 @@ import common.v2.Reads
 
 // https://adventofcode.com/2022/day/6
 
-object Day6 extends AdventApp[String](year = 2022, day = 6) {
+object Day6 extends AdventApp(year = 2022, day = 6) {
+  type Input = String
   def reads(raw: String): Input = raw
   def findDistinctStreamEnd(data: String, length: Int): Int =
     data.sliding(length).indexWhere(_.toSet.size == length) + length

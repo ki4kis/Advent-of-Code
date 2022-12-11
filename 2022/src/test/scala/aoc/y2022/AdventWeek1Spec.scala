@@ -9,7 +9,7 @@ import org.scalatest.Assertions._
 import cats.effect.unsafe.implicits.global
 
 class AdventWeek1Spec extends AnyFreeSpec {
-  val apps: List[AdventApp[_]] = List(Day1, Day2, Day3, Day4, Day5, Day6, Day7)
+  val apps: List[AdventApp] = List(Day1, Day2, Day3, Day4, Day5, Day6, Day7)
   val test: List[(Any, Any)] = List(
     (24000, 45000),
     (15, 12),

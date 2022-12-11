@@ -6,7 +6,8 @@ import common.v2.Reads
 
 // https://adventofcode.com/2022/day/4
 
-object Day4 extends AdventApp[Vector[Assigment]](year = 2022, day = 4) {
+object Day4 extends AdventApp(year = 2022, day = 4) {
+  type Input = Vector[Assigment]
   def reads(raw: String): Input = raw
     .split("\n")
     .toVector

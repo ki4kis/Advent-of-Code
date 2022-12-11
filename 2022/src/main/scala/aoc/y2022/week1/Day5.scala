@@ -8,7 +8,8 @@ import scala.collection.immutable.ListMap
 
 // https://adventofcode.com/2022/day/5
 
-object Day5 extends AdventApp[Ship](year = 2022, day = 5) {
+object Day5 extends AdventApp(year = 2022, day = 5) {
+  type Input = Ship
   def reads(raw: String): Input    = Ship.fromRaw(raw)
   def part1(input: Input): IO[Any] = Ship.part1.runA(input)
   def part2(input: Input): IO[Any] = Ship.part2.runA(input)
@@ -47,8 +48,8 @@ object Ship {
 
   type State[T] = StateT[IO, Ship, T]
 
-  def move(amount: Int, from: Int, to: Int): State[Unit] =
-    StateT.modify(_.move(amount, from, to))
+  def move(amount: Int, from: Int, to: Int): State[Unit] = StateT.modify(_.move(amount, from, to))
+
   val takeInst: State[Instruction] = StateT(ship => IO(ship.takeInstruction))
   val hasInst: State[Boolean]      = StateT.inspect(_.hasInstruction)
   val readTop: State[String]       = StateT.inspect(_.readTop)
