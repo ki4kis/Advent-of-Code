@@ -1,4 +1,4 @@
-package aoc.y2022.week1
+package aoc.y2022.week2
 
 import cats.effect.IO
 import common.v2.AdventApp

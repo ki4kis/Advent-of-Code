@@ -1,7 +1,11 @@
 package common
 
 final case class Vec(vec: Vector[Int]) { self =>
-  val dimentions    = vec.length
+  val dimentions = vec.length
+  def x          = vec(0)
+  def y          = vec(1)
+  def z          = vec(2)
+
   def unary_- : Vec = Vec(vec.map(-_))
 
   override def toString: String = vec.mkString("[", ",", "]")

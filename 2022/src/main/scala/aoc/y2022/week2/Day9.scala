@@ -1,4 +1,4 @@
-package aoc.y2022.week1
+package aoc.y2022.week2
 
 import cats.implicits._
 import cats.effect.IO
