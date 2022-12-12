@@ -27,10 +27,9 @@ object Day12Helper {
         .flatMap { path =>
           val head   = path.head
           val height = grid(head)
+
           for {
-            direction <- allDirections
-            nextStep = head + direction
-            nextHeight <- grid.lift(nextStep)
+            (nextStep, nextHeight) <- grid.neighbors4(path.head).toList
             heightDiff = nextHeight - height
             if heightDiff <= 1 && !newVisited(nextStep)
           } yield nextStep :: path
